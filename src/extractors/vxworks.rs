@@ -3,9 +3,31 @@ use crate::extractors::common::{Chroot, ExtractionResult, Extractor, ExtractorTy
 use crate::structures::vxworks::{
     get_symtab_endianness, parse_symtab_entry, VxWorksSymbolTableEntry,
 };
+use log::error;
 use serde_json;
 
 /// Describes the VxWorks symbol table extractor
+///
+/// ```
+/// use std::io::ErrorKind;
+/// use std::process::Command;
+/// use binwalk::extractors::common::ExtractorType;
+/// use binwalk::extractors::vxworks::vxworks_symtab_extractor;
+///
+/// match vxworks_symtab_extractor().utility {
+///     ExtractorType::None => panic!("Invalid extractor type of None"),
+///     ExtractorType::Internal(func) => println!("Internal extractor OK: {:?}", func),
+///     ExtractorType::External(cmd) => {
+///         if let Err(e) = Command::new(&cmd).output() {
+///             if e.kind() == ErrorKind::NotFound {
+///                 panic!("External extractor '{}' not found", cmd);
+///             } else {
+///                 panic!("Failed to execute external extractor '{}': {}", cmd, e);
+///             }
+///         }
+///     }
+/// }
+/// ```
 pub fn vxworks_symtab_extractor() -> Extractor {
     Extractor {
         do_not_recurse: true,
@@ -66,7 +88,7 @@ pub fn extract_symbol_table(
             match serde_json::to_string_pretty(&symtab_entries) {
                 // This should never happen...
                 Err(e) => {
-                    panic!("Failed to convert VxWorks symbol table to JSON: {}", e);
+                    error!("Failed to convert VxWorks symbol table to JSON: {}", e);
                 }
 
                 // Write JSON to file

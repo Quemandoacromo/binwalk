@@ -21,13 +21,17 @@ pub fn zip_parser(file_data: &[u8], offset: usize) -> Result<SignatureResult, Si
     };
 
     // Parse the ZIP file header
-    if parse_zip_header(&file_data[offset..]).is_ok() {
+    if let Ok(zip_file_header) = parse_zip_header(&file_data[offset..]) {
         // Locate the end-of-central-directory header, which must come after the zip local file entries
         if let Ok(zip_info) = find_zip_eof(file_data, offset) {
             result.size = zip_info.eof - offset;
             result.description = format!(
-                "{}, file count: {}, total size: {} bytes",
-                result.description, zip_info.file_count, result.size
+                "{}, version: {}.{}, file count: {}, total size: {} bytes",
+                result.description,
+                zip_file_header.version_major,
+                zip_file_header.version_minor,
+                zip_info.file_count,
+                result.size
             );
             return Ok(result);
         }
@@ -36,13 +40,13 @@ pub fn zip_parser(file_data: &[u8], offset: usize) -> Result<SignatureResult, Si
     Err(SignatureError)
 }
 
-struct ZipEOCDInfo {
-    eof: usize,
-    file_count: usize,
+pub struct ZipEOCDInfo {
+    pub eof: usize,
+    pub file_count: usize,
 }
 
 /// Need to grep the rest of the file data to locate the end-of-central-directory header, which tells us where the ZIP file ends.
-fn find_zip_eof(file_data: &[u8], offset: usize) -> Result<ZipEOCDInfo, SignatureError> {
+pub fn find_zip_eof(file_data: &[u8], offset: usize) -> Result<ZipEOCDInfo, SignatureError> {
     // This magic string assumes that the disk_number and central_directory_disk_number are 0
     const ZIP_EOCD_MAGIC: &[u8; 8] = b"PK\x05\x06\x00\x00\x00\x00";
 
