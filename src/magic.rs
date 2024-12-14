@@ -192,6 +192,17 @@ pub fn patterns() -> Vec<signatures::common::Signature> {
             description: signatures::linux::LINUX_BOOT_IMAGE_DESCRIPTION.to_string(),
             extractor: None,
         },
+        // linux arm zimage
+        signatures::common::Signature {
+            name: "linux_arm_zimage".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::linux::linux_arm_zimage_magic(),
+            parser: signatures::linux::linux_arm_zimage_parser,
+            description: signatures::linux::LINUX_ARM_ZIMAGE_DESCRIPTION.to_string(),
+            extractor: None,
+        },
         // zstd
         signatures::common::Signature {
             name: "zstd".to_string(),
@@ -212,7 +223,7 @@ pub fn patterns() -> Vec<signatures::common::Signature> {
             magic: signatures::zip::zip_magic(),
             parser: signatures::zip::zip_parser,
             description: signatures::zip::DESCRIPTION.to_string(),
-            extractor: Some(extractors::zip::zip_extractor()),
+            extractor: Some(extractors::sevenzip::sevenzip_extractor()),
         },
         // Intel PCH ROM
         signatures::common::Signature {
@@ -402,7 +413,7 @@ pub fn patterns() -> Vec<signatures::common::Signature> {
             magic: signatures::gpg::gpg_signed_magic(),
             parser: signatures::gpg::gpg_signed_parser,
             description: signatures::gpg::GPG_SIGNED_DESCRIPTION.to_string(),
-            extractor: Some(extractors::zlib::zlib_extractor()),
+            extractor: Some(extractors::gpg::gpg_extractor()),
         },
         // pem certificates
         signatures::common::Signature {
@@ -673,7 +684,7 @@ pub fn patterns() -> Vec<signatures::common::Signature> {
             name: "openssl".to_string(),
             short: false,
             magic_offset: 0,
-            always_display: false,
+            always_display: true,
             magic: signatures::openssl::openssl_crypt_magic(),
             parser: signatures::openssl::openssl_crypt_parser,
             description: signatures::openssl::DESCRIPTION.to_string(),
@@ -898,6 +909,215 @@ pub fn patterns() -> Vec<signatures::common::Signature> {
             parser: signatures::autel::autel_parser,
             description: signatures::autel::DESCRIPTION.to_string(),
             extractor: Some(extractors::autel::autel_extractor()),
+        },
+        // NTFS
+        signatures::common::Signature {
+            name: "ntfs".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::ntfs::ntfs_magic(),
+            parser: signatures::ntfs::ntfs_parser,
+            description: signatures::ntfs::DESCRIPTION.to_string(),
+            extractor: Some(extractors::tsk::tsk_extractor()),
+        },
+        // APFS
+        signatures::common::Signature {
+            name: "apfs".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::apfs::apfs_magic(),
+            parser: signatures::apfs::apfs_parser,
+            description: signatures::apfs::DESCRIPTION.to_string(),
+            extractor: Some(extractors::apfs::apfs_extractor()),
+        },
+        // BTRFS
+        signatures::common::Signature {
+            name: "btrfs".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: true,
+            magic: signatures::btrfs::btrfs_magic(),
+            parser: signatures::btrfs::btrfs_parser,
+            description: signatures::btrfs::DESCRIPTION.to_string(),
+            extractor: None,
+        },
+        // WinCE
+        signatures::common::Signature {
+            name: "wince".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::wince::wince_magic(),
+            parser: signatures::wince::wince_parser,
+            description: signatures::wince::DESCRIPTION.to_string(),
+            extractor: Some(extractors::wince::wince_extractor()),
+        },
+        // Dahua ZIP
+        signatures::common::Signature {
+            name: "dahua_zip".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::dahua_zip::dahua_zip_magic(),
+            parser: signatures::dahua_zip::dahua_zip_parser,
+            description: signatures::dahua_zip::DESCRIPTION.to_string(),
+            extractor: Some(extractors::dahua_zip::dahua_zip_extractor()),
+        },
+        // DLink MH01
+        signatures::common::Signature {
+            name: "mh01".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::mh01::mh01_magic(),
+            parser: signatures::mh01::mh01_parser,
+            description: signatures::mh01::DESCRIPTION.to_string(),
+            extractor: Some(extractors::mh01::mh01_extractor()),
+        },
+        // CSman DAT
+        signatures::common::Signature {
+            name: "csman".to_string(),
+            short: true,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::csman::csman_magic(),
+            parser: signatures::csman::csman_parser,
+            description: signatures::csman::DESCRIPTION.to_string(),
+            extractor: Some(extractors::csman::csman_extractor()),
+        },
+        // DirectX ByteCode
+        signatures::common::Signature {
+            name: "dxbc".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::dxbc::dxbc_magic(),
+            parser: signatures::dxbc::dxbc_parser,
+            description: signatures::dxbc::DESCRIPTION.to_string(),
+            extractor: Some(extractors::dxbc::dxbc_extractor()),
+        },
+        // D-Link TLV firmware
+        signatures::common::Signature {
+            name: "dlink_tlv".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::dlink_tlv::dlink_tlv_magic(),
+            parser: signatures::dlink_tlv::dlink_tlv_parser,
+            description: signatures::dlink_tlv::DESCRIPTION.to_string(),
+            extractor: Some(extractors::dlink_tlv::dlink_tlv_extractor()),
+        },
+        // DLKE encrypted firmware
+        signatures::common::Signature {
+            name: "dlke".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::dlke::dlke_magic(),
+            parser: signatures::dlke::dlke_parser,
+            description: signatures::dlke::DESCRIPTION.to_string(),
+            extractor: Some(extractors::dlke::dlke_extractor()),
+        },
+        // SHRS encrypted firmware
+        signatures::common::Signature {
+            name: "shrs".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::shrs::shrs_magic(),
+            parser: signatures::shrs::shrs_parser,
+            description: signatures::shrs::DESCRIPTION.to_string(),
+            extractor: Some(extractors::shrs::shrs_extractor()),
+        },
+        // PKCS DER hashes
+        signatures::common::Signature {
+            name: "pkcs_der_hash".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::pkcs_der::der_hash_magic(),
+            parser: signatures::pkcs_der::der_hash_parser,
+            description: signatures::pkcs_der::DESCRIPTION.to_string(),
+            extractor: None,
+        },
+        // LogFS
+        signatures::common::Signature {
+            name: "logfs".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::logfs::logfs_magic(),
+            parser: signatures::logfs::logfs_parser,
+            description: signatures::logfs::DESCRIPTION.to_string(),
+            extractor: None,
+        },
+        // encrpted_img
+        signatures::common::Signature {
+            name: "encrpted_img".to_string(),
+            short: true,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::encrpted_img::encrpted_img_magic(),
+            parser: signatures::encrpted_img::encrpted_img_parser,
+            description: signatures::encrpted_img::DESCRIPTION.to_string(),
+            extractor: None,
+        },
+        // Android boot image
+        signatures::common::Signature {
+            name: "android_bootimg".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::android_bootimg::android_bootimg_magic(),
+            parser: signatures::android_bootimg::android_bootimg_parser,
+            description: signatures::android_bootimg::DESCRIPTION.to_string(),
+            extractor: None,
+        },
+        // uboot
+        signatures::common::Signature {
+            name: "uboot".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: true,
+            magic: signatures::uboot::uboot_magic(),
+            parser: signatures::uboot::uboot_parser,
+            description: signatures::uboot::DESCRIPTION.to_string(),
+            extractor: None,
+        },
+        // dms firmware
+        signatures::common::Signature {
+            name: "dms".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::dms::dms_magic(),
+            parser: signatures::dms::dms_parser,
+            description: signatures::dms::DESCRIPTION.to_string(),
+            extractor: Some(extractors::swapped::swapped_extractor_u16()),
+        },
+        // dkbs firmware
+        signatures::common::Signature {
+            name: "dkbs".to_string(),
+            short: false,
+            magic_offset: 0,
+            always_display: false,
+            magic: signatures::dkbs::dkbs_magic(),
+            parser: signatures::dkbs::dkbs_parser,
+            description: signatures::dkbs::DESCRIPTION.to_string(),
+            extractor: None,
+        },
+        // known encrypted firmware
+        signatures::common::Signature {
+            name: "encfw".to_string(),
+            short: true,
+            magic_offset: 0,
+            always_display: true,
+            magic: signatures::encfw::encfw_magic(),
+            parser: signatures::encfw::encfw_parser,
+            description: signatures::encfw::DESCRIPTION.to_string(),
+            extractor: None,
         },
     ];
 
